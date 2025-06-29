@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>从零到一的大模型之旅：一个大语言模型是如何工作的？ - Hexo</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Meng Space"><meta name="msapplication-TileImage" content="/img/favicon.svg"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Meng Space"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="What i cannot create, i do not understand"><meta property="og:type" content="blog"><meta property="og:title" content="从零到一的大模型之旅：一个大语言模型是如何工作的？"><meta property="og:url" content="https://codancer2000.github.io/2025/06/29/Transformer/"><meta property="og:site_name" content="Hexo"><meta property="og:description" content="What i cannot create, i do not understand"><meta property="og:locale" content="en_US"><meta property="og:image" content="https://codancer2000.github.io/images/transformrt/1.png"><meta property="og:image" content="https://codancer2000.github.io/images/transformrt/3.png"><meta property="og:image" content="https://codancer2000.github.io/images/transformrt/2.png"><meta property="article:published_time" content="2025-06-29T08:22:02.238Z"><meta property="article:modified_time" content="2025-06-29T10:09:56.831Z"><meta property="article:author" content="codancer"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://codancer2000.github.io/images/transformrt/1.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://codancer2000.github.io/2025/06/29/Transformer/"},"headline":"从零到一的大模型之旅：一个大语言模型是如何工作的？","image":["https://codancer2000.github.io/images/transformrt/1.png","https://codancer2000.github.io/images/transformrt/3.png","https://codancer2000.github.io/images/transformrt/2.png"],"datePublished":"2025-06-29T08:22:02.238Z","dateModified":"2025-06-29T10:09:56.831Z","author":{"@type":"Person","name":"codancer"},"publisher":{"@type":"Organization","name":"Hexo","logo":{"@type":"ImageObject","url":"https://codancer2000.github.io/img/logo.svg"}},"description":"What i cannot create, i do not understand"}</script><link rel="canonical" href="https://codancer2000.github.io/2025/06/29/Transformer/"><link rel="icon" href="/img/favicon.svg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link data-pjax rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link data-pjax rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><!--!--><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const id = '#' + CSS.escape(location.hash.substring(1));
+          const $tabMenu = document.querySelector(`.tabs a[href="${id}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(id);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.svg" alt="Hexo" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2025-06-29T08:22:02.238Z" title="2025/6/29 16:22:02">2025-06-29</time></span><span class="level-item">Updated&nbsp;<time dateTime="2025-06-29T10:09:56.831Z" title="2025/6/29 18:09:56">2025-06-29</time></span><span class="level-item">13 minutes read (About 1973 words)</span></div></div><h1 class="title is-3 is-size-4-mobile">从零到一的大模型之旅：一个大语言模型是如何工作的？</h1><div class="content"><p><em>What i cannot create, i do not understand</em>  </p>
+<span id="more"></span>
+
+<p>从2022年11月30日OpenAI发布了智能聊天对话应用ChatGPT以来，大模型在两年半的时间内几乎成为了人人尽知的词语。无论是领域前沿的研究人员，还是企业中的工程师，亦或是自媒体的从业人员，都或多或少的在主动使用大模型来提高自己的效率。凭借对知识的”压缩能力”，人们可以快速高效的获得自己想要得到的答案，人们对于知识获取的方式发生了巨大变革。</p>
+<p>作为程序员最重要网站之一的Stack Overflow，在大模型诞生后，面临着“Stack overflow is almost dead”的趋势。</p>
+<p><img src="/../images/transformrt/1.png" alt="Stack Overflow is dead"></p>
+<p>正如Richard Feynman所说：“What i cannot create, i do not understand”，了解大模型运行的基础原理总归是有益的，本文将从大模型的基础原理讲起，理清大模型“智能”背后的技术。</p>
+<h2 id="一、一切都是概率，预测下一个词"><a href="#一、一切都是概率，预测下一个词" class="headerlink" title="一、一切都是概率，预测下一个词"></a>一、一切都是概率，预测下一个词</h2><p>一言以蔽之，大模型本质上是一个“单词补全器”，对于输入的一个单词序列，大模型会给出下一个可能的单词整体的概率分布。，不断的重复这个过程，大模型就能够产生出一段“有意义的”文本。如果大模型收到了下面的输入：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">I want to eat __</span><br></pre></td></tr></table></figure>
+<p>他将会输出候选单词列表中每个单词作为答案的概率，比如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">apple 0.7</span><br><span class="line">flower 0.2</span><br><span class="line">sky 0.1</span><br></pre></td></tr></table></figure>
+<p>大模型会选择概率最高的单词作为答案，此时用户输入的句子就会变为</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">I want to eat apple.</span><br></pre></td></tr></table></figure>
+<p>ChatGPT之所以能够根据用户的问题回答出对应的答案，本质上也是一种补全。一般情况下，基于大模型的聊天应用都会内置一个提前预制好的单词序列前缀，我们称之为System Prompt（系统提示词），这样在单次问答的场景下，大模型的输出本质上是在补全System Prompt和User System Prompt，通过这种补全机制，大模型便可以输出针对用户问题的答案。</p>
+<h2 id="二、向量化，确定一个单词的“语义”"><a href="#二、向量化，确定一个单词的“语义”" class="headerlink" title="二、向量化，确定一个单词的“语义”"></a>二、向量化，确定一个单词的“语义”</h2><p>显然，计算机从诞生到现在只能用来处理“数字”，而我们输入的是各种自然语言，为了能够让计算机理解单词所对应的语义，我们需要建立起一座从单词到数字的桥梁，在深度学习领域中，这个桥梁叫做Embedding（向量化）。</p>
+<p>向量化的目的是为每个单词在一个高维空间中寻找到该单词对应的向量。可以这么理解，每个单词拥有若干的特征，这些特征可以唯一的确认一个单词的含义。<br>如果我们能可视化这个高维空间，我们可以看到意思相近的词语对应的向量挨得越近，如cat和dog，因为它们都是家养宠物。我们也可以通过单词向量之间的运算变换得到一些有意思的发现。比如：</p>
+<p>$ Vec(Germany) - Vec(Italy) + Vec(Hitler) \approx Vec(Mussolini) $</p>
+<p>在GPT-3模型中，每个单词向量有12288个维度。当模型接收到一串单词序列后，便会对这个单词序列进行Embedding操作，得到大模型“实际”可以被识别的输入：一个$N * M$的矩阵，$N$为单词数目，$M$为词向量的维度。</p>
+<h2 id="三、如何确认上下文语境中的单词含义？Attention-is-All-You-Need！"><a href="#三、如何确认上下文语境中的单词含义？Attention-is-All-You-Need！" class="headerlink" title="三、如何确认上下文语境中的单词含义？Attention is All You Need！"></a>三、如何确认上下文语境中的单词含义？Attention is All You Need！</h2><p>虽然向量化可以确定每个输入单词的含义，但是在不同的语境下，同样的单词却有着不同的含义，如何准确的获取每个单词在当前语境下”正确”的向量?从某种角度上讲，一旦能解决这个问题，计算机便可以“理解”句子的含义了。</p>
+<p>2017年，Google在NIPS发表了一遍标题为《Attention Is All You Need》的论文，这篇论文通过引入了注意力机制成功的解决了在不同上下文环境下确认单词含义的挑战，这也成为了大模型技术发展的重要基石。<br><img src="/../images/transformrt/3.png" alt="Attention Is All You Need"></p>
+<p>假设大模型输入了一段文本：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">There is a blue cat</span><br></pre></td></tr></table></figure>
+
+<p>在上述语境下，cat将不再是原本的cat，而会受到blue这个形容词的影响，那么这种“影响”是否可也被向量化呢？答案是Yes。在注意力机制中，对单词定义了一种查询操作$Query$，该操作可以理解为：“我前面有形容词吗？”或者“我前面有贬义词么”等一些语义上的讯问。</p>
+<p>为了实现查询操作，注意力模块训练了一个矩阵$W_{q}$，将其与当前单词的向量进行点积操作即可得到当前单词的一个查询矩阵$Q$。作为$Query$的回应，注意力模块训练了另外一个矩阵$W_{k}$，前面的单词向量和$W_{k}$点积可以得到每个单词的$K$矩阵。将当前单词的$Q$和前面的每个单词的$K$进行点积，即可得到前面每个单词对当前单词的“影响力”。<br>通过softmax方法归一化，就可以得到每个单词影响当前单词的概率。最终，为了将当前单词“校准到”真实含义的向量，注意力引入了第三个矩阵$W_{v}$，前面的每个单词和$W_{v}$矩阵进行点积后便得到了向量$V$。形式化的，注意力机制可以用如下公式计算：</p>
+<p>$Attention(Q, K, V) &#x3D; softmax(\frac{QK^{T}}{\sqrt{d_k}})V$</p>
+<p>当计算完当前单词与前面每个单词的注意力后，将当前单词的的向量累加上注意力向量即可得到校准后的向量，换句话说，<strong>通过atttion模块计算后，单词的向量编码了更为丰富的含义</strong>。</p>
+<p>上述描述的计算过程被称为“单头注意力机制”，在Google提出的论文中，Transformer架构采用了并行的多头注意力机制，也即对于每个单词并行的运行多次注意力，然后加权平均得到最终的校准后的向量。</p>
+<h2 id="四、Transformer！"><a href="#四、Transformer！" class="headerlink" title="四、Transformer！"></a>四、Transformer！</h2><p>最终我们得到了大模型的基础架构：Transformer</p>
+<p><img src="/../images/transformrt/2.png" alt="Transformer架构"></p>
+<p>回过头再看Transformer架构就能发现，序列首先被Embedding，然后经过多层的Attention模块不断强化单词语义，需要注意的是，Transformer在训练过程中采用了Masked Multi-Head Attention，这是为了避免在训练的过程中出现根据数据集后面的单词影响前面单词的情况，<br>比如如果数据集是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">I want to eat _ and eggs</span><br></pre></td></tr></table></figure>
+<p>在预测空格部分时，应当只考虑I want to eat对空格位置的影响，所以强制将空格后续位置的Attention设置为0以避免这种影响。最终，Transformer输出下一个单词的概率分布，完成了大模型的“智能”过程。</p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>从零到一的大模型之旅：一个大语言模型是如何工作的？</p><p><a href="https://codancer2000.github.io/2025/06/29/Transformer/">https://codancer2000.github.io/2025/06/29/Transformer/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>codancer</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2025-06-29</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2025-06-29</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="sharethis-inline-share-buttons"></div><script src="codancer2000.github.io" defer></script></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2025/06/21/Nash-2025-06-21/"><span class="level-item">论文阅读：《NaSh:Guardrails for an LLM-Powered Natural》</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">Comments</h3><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div><script>var disqus_config = function () {
+            this.page.url = 'https://codancer2000.github.io/2025/06/29/Transformer/';
+            this.page.identifier = '2025/06/29/Transformer/';
+        };
+        (function() {
+            var d = document, s = d.createElement('script');  
+            s.src = '//' + 'codancer blog' + '.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/avatar.png" alt="Codancer"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Codancer</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>Nanjing, China</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">Posts</p><a href="/archives"><p class="title">2</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Categories</p><a href="/categories"><p class="title">0</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Tags</p><a href="/tags"><p class="title">0</p></a></div></div></nav><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Github" href="https://github.com/codancer2000"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="RSS" href="/"><i class="fas fa-rss"></i></a></div></div></div><!--!--><!--!--><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">Recents</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2025-06-29T08:22:02.238Z">2025-06-29</time></p><p class="title"><a href="/2025/06/29/Transformer/">从零到一的大模型之旅：一个大语言模型是如何工作的？</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2025-06-21T02:06:04.832Z">2025-06-21</time></p><p class="title"><a href="/2025/06/21/Nash-2025-06-21/">论文阅读：《NaSh:Guardrails for an LLM-Powered Natural》</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">Archives</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2025/06/"><span class="level-start"><span class="level-item">June 2025</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">Subscribe for updates</h3><form action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open(&#039;https://feedburner.google.com/fb/a/mailverify?uri=&#039;,&#039;popupwindow&#039;,&#039;scrollbars=yes,width=550,height=520&#039;);return true"><input type="hidden" value="" name="uri"><input type="hidden" name="loc" value="en_US"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="Subscribe"></div></div></form></div></div></div><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">follow.it</h3><form action="" method="post" target="_blank"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="Subscribe"></div></div></form></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.svg" alt="Hexo" height="28"></a><p class="is-size-7"><span>&copy; 2025 codancer</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p><p class="is-size-7">© 2019</p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script data-pjax src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script data-pjax src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "This website uses cookies to improve your experience.",
+          dismiss: "Got it!",
+          allow: "Allow cookies",
+          deny: "Decline",
+          link: "Learn more",
+          policy: "Cookie Policy",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/auto-render.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/mhchem.min.js" defer></script><script>window.addEventListener("load", function() {
+            document.querySelectorAll('[role="article"] > .content').forEach(function(element) {
+                renderMathInElement(element);
+            });
+        });</script><script type="text/javascript" id="MathJax-script" async>MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+        fontCache: 'global'
+      },
+      chtml: {
+        matchFontHeight: false
+      }
+    };</script><script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script src="/js/pjax.js"></script><!--!--><!--!--><!--!--><script data-pjax src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"Posts","pages":"Pages","categories":"Categories","tags":"Tags"});
+        });</script></body></html>
